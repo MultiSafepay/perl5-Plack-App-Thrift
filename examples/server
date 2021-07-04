@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Getopt::Long;
+
+my $opt_listen = ':8080';
+
+GetOptions('listen=s' => \$opt_listen)
+  or die("Error in command line arguments\n");
+
+use Plack::Builder;
+use Plack::Runner;
+use Plack::App::Thrift;
+use Plack::App::Thrift::Docs;
+
+use Thrift::GreetingService;
+use Thrift::Types;
+
+use GreetingService;
+
+my $processor = Thrift::GreetingServiceProcessor->new(GreetingService->new);
+
+my $psgi = builder {
+    mount '/'     => Plack::App::Thrift->new(processor => $processor);
+    mount '/docs' => Plack::App::Thrift::Docs->new(thrift_json_file => '.json');
+};
+
+warn "Listening on $opt_listen ($$)\n";
+warn "Visit $opt_listen/docs for documentation\n";
+
+my $runner = Plack::Runner->new;
+$runner->parse_options(
+    '-E' => 'production',
+    '-l' => $opt_listen
+);
+$runner->run($psgi);

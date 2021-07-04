@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Getopt::Long;
+
+use HTTP::Headers;
+use Thrift;
+use Thrift::HttpClient;
+use Thrift::BinaryProtocol;
+
+use Thrift::Types;
+use Thrift::GreetingService;
+
+my $transport = Thrift::HttpClient->new('http://localhost:8080');
+
+# Bug: HTTP::Message tries to clone a hashref {} and fails
+$transport->{headers} = HTTP::Headers->new;
+
+my $protocol  = Thrift::BinaryProtocol->new($transport);
+
+my $client = Thrift::GreetingServiceClient->new($protocol);
+
+eval {
+    $transport->open();
+
+    my $reply = $client->greet(Thrift::Greeting->new({name => 'Joe'}));
+
+    warn $reply->sentence, "\n";
+
+    $transport->close();
+
+    1;
+} or do {
+    use Data::Dumper;
+    warn Dumper($@);
+};

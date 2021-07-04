@@ -1,0 +1,72 @@
+{
+  "name": "",
+  "namespaces": {
+    "perl": "Thrift"
+  },
+  "includes": [
+  ],
+  "enums": [
+  ],
+  "typedefs": [
+  ],
+  "structs": [
+    {
+      "name": "Greeting",
+      "isException": false,
+      "isUnion": false,
+      "fields": [
+        {
+          "key": 1,
+          "name": "name",
+          "typeId": "string",
+          "required": "required"
+        }
+      ]
+    },
+    {
+      "name": "Reply",
+      "isException": false,
+      "isUnion": false,
+      "fields": [
+        {
+          "key": 1,
+          "name": "sentence",
+          "typeId": "string",
+          "required": "required"
+        }
+      ]
+    }
+  ],
+  "constants": [
+  ],
+  "services": [
+    {
+      "name": "GreetingService",
+      "functions": [
+        {
+          "name": "greet",
+          "returnTypeId": "struct",
+          "returnType": {
+            "typeId": "struct",
+            "class": "Reply"
+          },
+          "oneway": false,
+          "arguments": [
+            {
+              "key": 1,
+              "name": "greeting",
+              "typeId": "struct",
+              "type": {
+                "typeId": "struct",
+                "class": "Greeting"
+              },
+              "required": "required"
+            }
+          ],
+          "exceptions": [
+          ]
+        }
+      ]
+    }
+  ]
+}

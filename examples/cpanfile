@@ -1,0 +1,6 @@
+requires 'Plack';
+requires 'Thrift';
+requires 'IO::String';
+requires 'LWP::UserAgent';
+requires 'JSON';
+requires 'Text::Caml';
